@@ -686,7 +686,7 @@
     // --- FIRESTORE DATA LOGIC ---
 
     function loadUserData() {
-        if (!currentUserId) return;
+        if (!currentUserId || !db) return; // Check if db is initialized
 
         if (unsubscribeSnapshot) {
             unsubscribeSnapshot();
@@ -734,12 +734,15 @@
 
         }, (error) => {
             console.error("Error fetching Firestore data:", error);
+            // If there's an error with the listener (e.g., permissions issue), 
+            // we should still allow the user to play locally.
+            handleNoFirebaseAccess();
         });
     }
 
     async function saveUserData() {
-        if (!currentUserId) {
-            console.warn("Cannot save data: User ID is missing.");
+        if (!currentUserId || !db) {
+            console.warn("Cannot save data: Firebase not initialized or User ID is missing.");
             return;
         }
 
@@ -768,9 +771,35 @@
             dataChanged = false;
         } catch (error) {
             console.error("Error saving game data:", error);
+            // If save fails, warn the user but let them continue playing
+            handleNoFirebaseAccess();
         }
     }
     
+    // Handle case where Firebase fails to initialize or connect
+    function handleNoFirebaseAccess() {
+        // Stop Firestore listener if it was active
+        if (unsubscribeSnapshot) {
+            unsubscribeSnapshot();
+            unsubscribeSnapshot = null;
+        }
+        // Switch to "offline" mode for the game
+        db = null; 
+        auth = null;
+        currentUserId = 'GUEST_' + getOrCreateLocalNumericId(); // Use numeric ID as pseudo-UID
+        
+        loadingPrompt.innerHTML = '<h2 class="message-title text-4xl text-red-600">عدم اتصال به دیتابیس!</h2><p class="text-gray-600 mt-2">ذخیره امتیاز امکان‌پذیر نیست. شما در حالت مهمان بازی می‌کنید.</p>';
+        loadingPrompt.style.display = 'block';
+        startPrompt.style.display = 'none';
+        
+        setTimeout(() => {
+            loadingPrompt.style.display = 'none'; 
+            startPrompt.style.display = 'block'; 
+            messageBox.style.display = 'flex';
+            updateGameUI(); 
+        }, 3000); 
+    }
+
     // --- UI UPDATES ---
 
     function updateGameUI() {
@@ -798,9 +827,8 @@
     // --- GAME LOGIC FUNCTIONS ---
 
     function resetGame() {
-        // Since we are using Anonymous Auth, the user is always "logged in"
         if (!currentUserId) {
-             console.error("Authentication not ready. Cannot start game.");
+             console.error("Initialization not ready. Cannot start game.");
              return;
         }
 
@@ -1003,6 +1031,7 @@
             dataChanged = true; 
             renderShopItems();
             playBuySound(true);
+            if (db) saveUserData(); // Save immediately if Firebase is connected
         } else {
             playBuySound(false);
         }
@@ -1013,6 +1042,7 @@
             currentCatId = catId;
             dataChanged = true; 
             renderShopItems(); 
+            if (db) saveUserData(); // Save immediately if Firebase is connected
         }
     }
     
@@ -1068,6 +1098,11 @@
     }
     
     function openAdminModal() {
+        if (!db) {
+             showAdminMessage(adminLoginMessage, 'اتصال به دیتابیس برقرار نیست. امکان ورود به پنل مدیریت وجود ندارد.', 'error');
+             return;
+        }
+
         // Close Shop and open Admin
         shopBox.style.display = 'none'; 
         gameRunning = false; 
@@ -1215,8 +1250,30 @@
     function initializeFirebase() {
         getOrCreateLocalNumericId(); // Generate numeric ID immediately
         
+        // =========================================================================
+        // [FIX]: FALLBACK CONFIGURATION FOR EXPORTED CODE (e.g., GitHub Pages)
+        // این پیکربندی ساختگی است و فقط برای جلوگیری از کرش برنامه در محیطی غیر از ویرایشگر 
+        // کد (مثل گیت‌هاب) استفاده می‌شود. برای ذخیره‌سازی داده‌ها باید آن را با اطلاعات 
+        // واقعی Firebase خود جایگزین کنید.
+        let firebaseConfig = {
+            apiKey: "DUMMY-API-KEY", 
+            authDomain: "local-game.firebaseapp.com",
+            projectId: "local-game-project"
+        }; 
+        // =========================================================================
+
+        let initialAuthToken = null;
+
         try {
-            const firebaseConfig = JSON.parse(__firebase_config);
+            // 1. Load config from the Canvas environment if available
+            if (typeof __firebase_config !== 'undefined' && __firebase_config.length > 5) {
+                firebaseConfig = JSON.parse(__firebase_config);
+                initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+            } else {
+                console.warn("Firebase configuration variable not found. Using local placeholder config. DATA WILL NOT BE SAVED.");
+                // We use the dummy config defined above.
+            }
+
             firebaseApp = initializeApp(firebaseConfig);
             auth = getAuth(firebaseApp);
             db = getFirestore(firebaseApp);
@@ -1230,26 +1287,24 @@
                     currentUserId = null;
                     
                     try {
-                        const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                        if (token) {
-                            await signInWithCustomToken(auth, token);
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
                         } else {
                             // Fallback to anonymous sign-in
                             await signInAnonymously(auth);
                         }
                     } catch (error) {
                          console.error("Error with initial/anonymous sign-in:", error);
-                         // If sign-in fails, show error or continue in guest mode (but game won't save)
-                         loadingPrompt.innerHTML = '<h2 class="message-title text-4xl text-red-600">خطای اتصال!</h2><p class="text-gray-600 mt-2">ذخیره امتیاز امکان‌پذیر نیست.</p>';
-                         messageBox.style.display = 'flex';
+                         // If sign-in fails, switch to guest mode
+                         handleNoFirebaseAccess();
                     }
                 }
             });
 
         } catch (error) {
             console.error("Firebase Initialization Error:", error);
-            loadingPrompt.innerHTML = '<h2 class="message-title text-4xl text-red-600">خطای پیکربندی!</h2><p class="text-gray-600 mt-2">سیستم نتوانست راه‌اندازی شود.</p>';
-            messageBox.style.display = 'flex';
+            // This is the error user saw (config/parse failed)
+            handleNoFirebaseAccess(); 
         }
     }
 
