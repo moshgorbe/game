@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بازي پرش گربه و موش</title>
+    <title>بازی پرش گربه و موش</title>
     <!-- Tone.js for simple sound effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <!-- Tailwind CSS CDN for base styling -->
@@ -30,12 +30,11 @@
             width: 100%;
             max-width: 600px;
             text-align: center;
-            position: relative; /* Needed for modals */
+            position: relative; 
         }
 
         #game-canvas {
             display: block;
-            /* رنگ پس‌زمينه کف زمين */
             background: linear-gradient(to bottom, #d6f2ff 0%, #d6f2ff 82%, #443021 82%, #443021 100%);
             border: 4px solid #333;
             border-radius: 10px;
@@ -136,21 +135,6 @@
             margin-bottom: 10px;
         }
 
-        .auth-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            text-align: right;
-            font-size: 1.1rem;
-            transition: border-color 0.2s;
-        }
-        .auth-input:focus {
-             border-color: #3b82f6;
-             outline: none;
-        }
-
         /* Admin specific styling */
         .admin-input {
             width: 100%;
@@ -184,63 +168,46 @@
 <body>
 
 <div id="game-container" class="relative">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">پرش گربه: تعقيب و گريز موش ????</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">پرش گربه: تعقیب و گریز موش 🐱🐭</h1>
     
-    <!-- User Status Bar -->
+    <!-- User Status Bar (Shows the numeric ID) -->
     <div id="user-status" class="flex justify-between items-center text-xs text-gray-600 mb-2 p-1 bg-gray-50 rounded-lg border border-gray-100" style="display: none;">
-        <span id="user-info-text"></span>
-        <button id="sign-out-button" class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition duration-150 text-xs">خروج</button>
+        <span id="user-info-text" class="text-sm font-bold text-indigo-700"></span>
+        <button id="sign-out-button" class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition duration-150 text-xs hidden">خروج</button>
     </div>
 
     <div class="game-ui">
         <div class="flex items-center">
-            <div id="score-display">امتياز: 0</div>
+            <div id="score-display">امتیاز: 0</div>
         </div>
         <button id="shop-button" class="btn bg-blue-500 hover:bg-blue-600 shadow-blue-500/40 !text-sm !py-2 !px-4 !m-0">
-            فروشگاه ???
+            فروشگاه 🛍️
         </button>
     </div>
     
     <div class="flex justify-center mb-2">
-        <div id="high-score-display">بهترين: 0</div>
-        <div id="coin-display">سکه گربه: 0 ??</div>
+        <div id="high-score-display">بهترین: 0</div>
+        <div id="coin-display">سکه گربه: 0 💰</div>
     </div>
 
     <canvas id="game-canvas"></canvas>
 
-    <!-- 1. Authentication Modal -->
-    <div id="auth-modal" class="modal-box" style="display: none;">
-        <div class="modal-content !p-8 max-w-sm">
-            <h2 class="message-title text-4xl mb-4">ورود / ثبت نام</h2>
-            <p class="text-gray-600 mb-6">براي ذخيره پيشرفت خود، يک نام کاربري و رمز عبور دلخواه وارد کنيد.</p>
-            
-            <input type="text" id="auth-username" class="auth-input" placeholder="نام کاربري (ID دلخواه)">
-            <input type="password" id="auth-password" class="auth-input" placeholder="رمز عبور (حداقل ? کاراکتر)">
-            
-            <!-- NEW: Confirm Password for Sign Up -->
-            <input type="password" id="auth-confirm-password" class="auth-input hidden" placeholder="تکرار رمز عبور" style="margin-bottom: 25px;">
-
-            <button id="login-button" class="btn w-full bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/40 mb-3">
-                ورود به بازي
-            </button>
-            <button id="signup-button" class="btn w-full bg-green-600 hover:bg-green-700 shadow-green-500/40">
-                ايجاد حساب و شروع بازي
-            </button>
-            <p id="auth-error" class="text-red-500 mt-3 hidden"></p>
-        </div>
-    </div>
-
-    <!-- 2. Game Over / Start Message Box -->
-    <div id="message-box" class="modal-box" style="display: none;">
+    <!-- 1. Game Over / Start Message Box -->
+    <div id="message-box" class="modal-box" style="display: flex;">
         <div id="message-content" class="modal-content">
-            <div id="start-prompt" class="cursor-pointer hover:scale-105 transform transition duration-200">
-                <div class="text-[4rem] mb-2">??</div>
-                <h2 class="message-title !text-4xl text-gray-800">آماده‌اي؟ بزن بريم!</h2>
+            <div id="loading-prompt">
+                <h2 class="message-title text-4xl text-gray-800">در حال بارگذاری اطلاعات...</h2>
+                <p class="text-gray-600 mt-2">لطفاً صبر کنید.</p>
+            </div>
+            
+            <div id="start-prompt" class="cursor-pointer hover:scale-105 transform transition duration-200" style="display: none;">
+                <div class="text-[4rem] mb-2">🐾</div>
+                <h2 class="message-title !text-4xl text-gray-800">آماده‌ای؟ بزن بریم!</h2>
             </div>
 
             <div id="game-over-details" style="display: none;">
-                <!-- عنوان بازي تمام شد: اينجا جمله انگيزشي/طعنه‌آميز نمايش داده مي‌شود -->
-                <h2 id="message-title" class="message-title">بازي تمام شد!</h2>
+                <!-- عنوان بازی تمام شد: اینجا جمله انگیزشی/طعنه‌آمیز نمایش داده می‌شود -->
+                <h2 id="message-title" class="message-title">بازی تمام شد!</h2>
                 <p id="message-text" class="message-text"></p>
                 <!-- NEW: Sarcastic/Motivational message -->
                 <p id="sarcastic-message" class="text-base text-gray-600 mt-3 italic font-medium"></p>
@@ -249,11 +216,11 @@
         </div>
     </div>
     
-    <!-- 3. Shop Modal Box -->
+    <!-- 2. Shop Modal Box -->
     <div id="shop-box" class="modal-box" style="display: none;">
         <div class="modal-content !p-5">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h2 class="text-3xl font-bold text-gray-800">فروشگاه گربه ???</h2>
+                <h2 class="text-3xl font-bold text-gray-800">فروشگاه گربه 🛍️</h2>
                 <button id="close-shop-button" class="text-gray-500 hover:text-gray-700 text-3xl font-light leading-none">
                     &times;
                 </button>
@@ -261,18 +228,18 @@
             
             <div class="mb-4">
                 <div id="shop-coin-display" class="font-bold text-xl text-yellow-700 bg-yellow-100 p-2 rounded-lg">
-                    سکه گربه شما: 0 ??
+                    سکه گربه شما: 0 💰
                 </div>
-                <p class="text-sm text-gray-500 mt-1">امتيازهاي کسب‌شده در بازي به سکه تبديل مي‌شوند (فقط با شکستن رکورد).</p>
+                <p class="text-sm text-gray-500 mt-1">امتیازهای کسب‌شده در بازی به سکه تبدیل می‌شوند (فقط با شکستن رکورد).</p>
             </div>
             
             <!-- Shop Sections Container: Flexbox for side-by-side columns -->
             <div class="flex flex-col lg:flex-row gap-6">
 
-                <!-- SECTION 1: CAT PURCHASE (خريد گربه و پوسته‌ها) - Takes 2/3 width on large screens -->
+                <!-- SECTION 1: CAT PURCHASE (خرید گربه و پوسته‌ها) - Takes 2/3 width on large screens -->
                 <div class="w-full lg:w-2/3 bg-indigo-50 p-5 rounded-xl border-t-4 border-indigo-500 shadow-md">
                     <h3 class="text-xl font-extrabold text-indigo-800 mb-4 border-b pb-2">
-                        بخش ?: خريد گربه و پوسته‌ها ??
+                        بخش ۱: خرید گربه و پوسته‌ها 🐾
                     </h3>
                     <div id="shop-items-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Shop items will be rendered here -->
@@ -284,17 +251,17 @@
                 <div class="w-full lg:w-1/3 bg-yellow-100 p-5 rounded-xl border-t-4 border-yellow-500 shadow-md flex flex-col justify-between">
                     <div>
                         <h3 class="text-xl font-extrabold text-yellow-800 mb-3 border-b pb-2">
-                            بخش ?: فروش سکه گربه ??
+                            بخش ۲: فروش سکه گربه 💸
                         </h3>
                         <p class="text-gray-700 mb-4 text-sm leading-relaxed">
-                            مي‌توانيد سکه‌هاي اضافي خود را بفروشيد! براي هماهنگي و تعيين قيمت، روي دکمه زير کليک کنيد تا به صورت مستقيم با ادمين در تلگرام ارتباط برقرار کنيد. آيدي کاربري شما براي تأييد حساب، <span id="tele-uid-display" class="font-mono text-xs font-semibold text-gray-900">...</span> است.
+                            می‌توانید سکه‌های اضافی خود را بفروشید! برای هماهنگی و تعیین قیمت، روی دکمه زیر کلیک کنید. آیدی کاربری شما برای تأیید حساب، <span id="tele-uid-display" class="font-mono text-xs font-semibold text-gray-900">...</span> است.
                         </p>
                     </div>
-                    <!-- دکمه هدايت به تلگرام -->
+                    <!-- دکمه هدایت به تلگرام -->
                     <a id="telegram-link" href="https://t.me/moshgorbeadmin" target="_blank"
                        class="inline-flex items-center justify-center w-full bg-cyan-600 text-white py-2.5 px-6 rounded-lg font-black text-base transition duration-300 transform hover:bg-cyan-700 hover:scale-[1.02] shadow-lg focus:outline-none focus:ring-4 focus:ring-cyan-300 mt-4">
-                        فروش سکه و تماس با ادمين
-                        <!-- آيکون تلگرام (inline SVG for simplicity) -->
+                        فروش سکه و تماس با ادمین
+                        <!-- آیکون تلگرام (inline SVG for simplicity) -->
                         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19.9 5.09a.57.57 0 00-.7-.1l-16.5 6.3a.57.57 0 00.08 1.05l4.6 1.48 10.33-6.57a.1.1 0 01.12.02l-8.52 7.72-.1 3.52c0 .24.18.44.42.48l1.7-.13c.12-.01.23-.08.28-.19l2.7-2.6 4.7 3.5a.57.57 0 00.4.15.58.58 0 00.37-.15.57.57 0 00.17-.46l1.3-8.8a.57.57 0 00-.36-.67z"/>
                         </svg>
@@ -307,17 +274,17 @@
             <!-- Admin Access Link in Shop (NEW LOCATION) -->
             <div class="mt-6 pt-3 border-t border-gray-200 text-left">
                 <a id="shop-admin-trigger" class="text-xs text-gray-400 hover:text-gray-600 cursor-pointer font-mono" title="Admin Access">
-                    ?? Admin Console Access
+                    🌐 Admin Console Access
                 </a>
             </div>
         </div>
     </div>
     
-    <!-- 4. Admin Modal Box -->
+    <!-- 3. Admin Modal Box -->
     <div id="admin-modal" class="modal-box" style="display: none;">
         <div class="modal-content !p-6 max-w-md">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">پنل مديريت امتياز ??</h2>
+                <h2 class="text-2xl font-bold text-gray-800">پنل مدیریت امتیاز 👑</h2>
                 <button id="close-admin-button" class="text-gray-500 hover:text-gray-700 text-3xl font-light leading-none">
                     &times;
                 </button>
@@ -325,8 +292,8 @@
             
             <!-- Admin Login -->
             <div id="admin-login-view" class="space-y-4">
-                <p class="text-red-600 font-semibold text-sm">?? دسترسي فقط براي مدير مجاز است ??</p>
-                <input type="text" id="admin-username-input" placeholder="نام کاربري مدير"
+                <p class="text-red-600 font-semibold text-sm">⚠️ دسترسی فقط برای مدیر مجاز است ⚠️</p>
+                <input type="text" id="admin-username-input" placeholder="نام کاربری مدیر"
                        class="admin-input border-blue-300">
                 <input type="password" id="admin-password-input" placeholder="رمز عبور محرمانه"
                        class="admin-input border-blue-300">
@@ -341,26 +308,29 @@
             <div id="admin-panel-view" class="space-y-5 hidden">
                 <!-- Search -->
                 <div class="p-3 border border-blue-300 bg-blue-50 rounded-lg space-y-2">
-                    <h3 class="font-bold text-blue-700">جستجوي کاربر</h3>
-                    <input type="text" id="admin-user-id-input" placeholder="آيدي دقيق کاربر (UID)"
+                    <h3 class="font-bold text-blue-700">جستجوی کاربر (با Firebase UID)</h3>
+                    <input type="text" id="admin-user-id-input" placeholder="آیدی دقیق کاربر (Firebase UID)"
                            class="admin-input text-gray-800">
                     <button id="admin-search-button"
                             class="btn w-full bg-blue-500 hover:bg-blue-600 !py-2 !px-4 !mt-0 !mb-1">
-                        جستجو و مشاهده امتياز
+                        جستجو و مشاهده امتیاز
                     </button>
+                    <p class="text-xs text-red-500 mt-1">
+                        توجه: برای جستجو باید UID بلند فایربیس را وارد کنید (نه آیدی عددی کوتاه).
+                    </p>
                 </div>
                 
                 <!-- Score Display -->
                 <div id="admin-score-display" class="p-4 bg-gray-100 border border-gray-300 rounded-lg hidden">
-                    <p class="text-gray-600 font-medium">امتياز جاري کاربر:</p>
+                    <p class="text-gray-600 font-medium">امتیاز جاری کاربر:</p>
                     <p class="text-3xl font-extrabold text-indigo-700 mt-1">
-                        بهترين امتياز: <span id="admin-current-highscore">0</span> | سکه گربه: <span id="admin-current-catcoins">0</span> ??
+                        بهترین امتیاز: <span id="admin-current-highscore">0</span> | سکه گربه: <span id="admin-current-catcoins">0</span> 💰
                     </p>
                 </div>
 
                 <!-- Modify Score -->
                 <div id="admin-modify-panel" class="p-3 border border-green-300 bg-green-50 rounded-lg space-y-2 hidden">
-                    <h3 class="font-bold text-green-700">تغيير سکه گربه (Coins)</h3>
+                    <h3 class="font-bold text-green-700">تغییر سکه گربه (Coins)</h3>
                     <input type="number" id="admin-point-amount-input" placeholder="مقدار سکه (مثال: 100)" value="100"
                            class="admin-input text-gray-800">
                     <div class="flex space-x-2 space-x-reverse">
@@ -385,19 +355,20 @@
 <script type="module">
     // --- FIREBASE IMPORTS ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    // SignOut, createUserWithEmail, signInWithEmail are removed as they are no longer needed
+    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 
-    // فعال کردن لاگ‌هاي Firebase براي ديباگ
+    // فعال کردن لاگ‌های Firebase برای دیباگ
     setLogLevel('Debug');
     
     // --- GLOBAL FIREBASE/AUTH VARIABLES ---
     let firebaseApp;
     let db;
     let auth;
-    let currentUserId = null;
-    let currentUsername = 'Guest'; 
+    let currentUserId = null; // Firebase UID
+    let localNumericId = null; // Custom numeric ID for display
     let isAuthReady = false; 
     let unsubscribeSnapshot = null; // To hold the Firestore listener unsubscriber
     
@@ -405,6 +376,7 @@
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-game-app-id';
     const GAME_DATA_COLLECTION = 'gameData';
     const GAME_PROFILE_DOCUMENT = 'profile';
+    const LOCAL_ID_KEY = 'moshgorbe_numeric_id'; 
     const ADMIN_USER = "amirbinyaz"; // Hardcoded Admin Credential (secret)
     const ADMIN_PASS = "09178458526amirpc"; // Hardcoded Admin Credential (secret)
 
@@ -430,28 +402,28 @@
     const DEFAULT_CAT_ID = 'tabby';
 
     const CAT_PALETTES = [
-        { id: 'tabby', name: 'گربه تبي (پيش فرض)', price: 0, BODY_BASE: '#735f52', STRIPE_COLOR: '#52453a', BELLY_COLOR: '#e5e5e5', EYE_COLOR: '#44aa00', EAR_PINK: '#f0d0c0' },
-        { id: 'black', name: 'گربه سياه', price: 100, BODY_BASE: '#111111', STRIPE_COLOR: '#000000', BELLY_COLOR: '#333333', EYE_COLOR: '#ffcc00', EAR_PINK: '#555555' },
-        { id: 'white', name: 'گربه سفيد', price: 100, BODY_BASE: '#ffffff', STRIPE_COLOR: '#e0e0e0', BELLY_COLOR: '#f0f0f0', EYE_COLOR: '#0099ff', EAR_PINK: '#ffaaaa' },
-        { id: 'ginger', name: 'گربه پرتقالي', price: 200, BODY_BASE: '#ff9933', STRIPE_COLOR: '#cc6600', BELLY_COLOR: '#fff0d0', EYE_COLOR: '#009900', EAR_PINK: '#ffccaa' },
+        { id: 'tabby', name: 'گربه تبی (پیش فرض)', price: 0, BODY_BASE: '#735f52', STRIPE_COLOR: '#52453a', BELLY_COLOR: '#e5e5e5', EYE_COLOR: '#44aa00', EAR_PINK: '#f0d0c0' },
+        { id: 'black', name: 'گربه سیاه', price: 100, BODY_BASE: '#111111', STRIPE_COLOR: '#000000', BELLY_COLOR: '#333333', EYE_COLOR: '#ffcc00', EAR_PINK: '#555555' },
+        { id: 'white', name: 'گربه سفید', price: 100, BODY_BASE: '#ffffff', STRIPE_COLOR: '#e0e0e0', BELLY_COLOR: '#f0f0f0', EYE_COLOR: '#0099ff', EAR_PINK: '#ffaaaa' },
+        { id: 'ginger', name: 'گربه پرتقالی', price: 200, BODY_BASE: '#ff9933', STRIPE_COLOR: '#cc6600', BELLY_COLOR: '#fff0d0', EYE_COLOR: '#009900', EAR_PINK: '#ffccaa' },
     ];
     
-    // جملات طعنه‌آميز براي نمايش بعد از باخت
+    // جملات طعنه‌آمیز برای نمایش بعد از باخت
     const SARCASTIC_MESSAGES = [
-        "ناراحت نباشيد، گربه‌ها براي خوابيدن ساخته شدن نه پريدن! ??",
-        "احتمالاً مقصر جاذبه‌ي زمين بوده، شما که عالي پريديد! ??",
-        "فراموش نکنيد، موش‌ها خيلي سريع‌تر از اون چيزي هستن که فکر مي‌کنيد. شايد... ??",
-        "يه روز ديگه براي تمرين کردن و نه امروز! ??",
-        "مشکلي نيست، فقط لازم نيست براي هر چيزي که مي‌بينيد، بپريد! ??",
-        "مهم اينه که تلاش کرديد! (بهتره دفعه بعد محکم‌تر بپريد) ??",
-        "شايد بايد به جاي گربه، خرگوش انتخاب مي‌کرديد. ??",
-        "عاليه! حداقل ديگه مجبور نيستيد با اون موش سر و کله بزنيد. استراحت کنيد! ??‍??"
+        "ناراحت نباشید، گربه‌ها برای خوابیدن ساخته شدن نه پریدن! 😴",
+        "احتمالاً مقصر جاذبه‌ی زمین بوده، شما که عالی پریدید! 😉",
+        "فراموش نکنید، موش‌ها خیلی سریع‌تر از اون چیزی هستن که فکر می‌کنید. شاید... 🤔",
+        "یه روز دیگه برای تمرین کردن و نه امروز! 👏",
+        "مشکلی نیست، فقط لازم نیست برای هر چیزی که می‌بینید، بپرید! 🤣",
+        "مهم اینه که تلاش کردید! (بهتره دفعه بعد محکم‌تر بپرید) 💪",
+        "شاید باید به جای گربه، خرگوش انتخاب می‌کردید. 🐰",
+        "عالیه! حداقل دیگه مجبور نیستید با اون موش سر و کله بزنید. استراحت کنید! 🧘‍♀️"
     ];
     
     // جملات مربوط به باخت گربه
     const catLossPhrases = [
-        "اوه سرم شکست! ??", "اين موش ارزش اين همه دردسر رو نداره! ??", "کف اين خونه خيلي ليزه! ??",
-        "اخ! پاي من! ??", "لعنت به جعبه‌ها! ??", "فکر کنم ? تا جونم تموم شد! ??"
+        "اوه سرم شکست! 🤕", "این موش ارزش این همه دردسر رو نداره! 😤", "کف این خونه خیلی لیزه! 😫",
+        "اخ! پای من! 🐾", "لعنت به جعبه‌ها! 📦", "فکر کنم ۹ تا جونم تموم شد! 👻"
     ];
 
     // --- DOM Elements ---
@@ -461,24 +433,19 @@
     const highScoreDisplay = document.getElementById('high-score-display'); 
     const coinDisplay = document.getElementById('coin-display'); 
     const messageBox = document.getElementById('message-box');
+    const loadingPrompt = document.getElementById('loading-prompt');
     const startPrompt = document.getElementById('start-prompt');
     const gameOverDetails = document.getElementById('game-over-details');
     const messageTitle = document.getElementById('message-title'); 
     const messageText = document.getElementById('message-text'); 
-    const sarcasticMessage = document.getElementById('sarcastic-message'); // NEW
+    const sarcasticMessage = document.getElementById('sarcastic-message'); 
     const restartButton = document.getElementById('restart-button'); 
     const shopButton = document.getElementById('shop-button');
     const shopBox = document.getElementById('shop-box'); 
     const closeShopButton = document.getElementById('close-shop-button');
     const shopItemsContainer = document.getElementById('shop-items-container');
     const shopCoinDisplay = document.getElementById('shop-coin-display');
-    const authModal = document.getElementById('auth-modal');
-    const authUsernameInput = document.getElementById('auth-username');
-    const authPasswordInput = document.getElementById('auth-password');
-    const authConfirmPasswordInput = document.getElementById('auth-confirm-password'); 
-    const loginButton = document.getElementById('login-button');
-    const signupButton = document.getElementById('signup-button');
-    const authError = document.getElementById('auth-error');
+    // const authModal = document.getElementById('auth-modal'); // Removed Auth Modal
     const signOutButton = document.getElementById('sign-out-button');
     const userStatus = document.getElementById('user-status');
     const userInfoText = document.getElementById('user-info-text');
@@ -522,7 +489,7 @@
     
     let lastSearchedAdminUserId = null; // For Admin Panel state
 
-    // --- UTILITIES & DRAWING FUNCTIONS (UNCHANGED) ---
+    // --- UTILITIES & DRAWING FUNCTIONS ---
 
     function drawCat(ctx, x, y, width, height, palette) {
         const p = palette; 
@@ -666,7 +633,7 @@
         ctx.fillStyle = '#222';
         ctx.font = '18px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('??', x + width / 2, boxY + boxHeight * 0.6);
+        ctx.fillText('🐭', x + width / 2, boxY + boxHeight * 0.6);
     }
     
     // --- SOUNDS (Tone.js) ---
@@ -693,82 +660,30 @@
     }
 
 
-    // --- FIREBASE AUTHENTICATION LOGIC (UNCHANGED) ---
+    // --- PERSISTENT NUMERIC ID LOGIC ---
 
-    function showAuthError(message) {
-        authError.textContent = message;
-        authError.classList.remove('hidden');
-        setTimeout(() => authError.classList.add('hidden'), 5000);
-    }
-    
-    function toggleConfirmPassword(show) {
-        if (show) {
-            authConfirmPasswordInput.classList.remove('hidden');
-        } else {
-            authConfirmPasswordInput.classList.add('hidden');
-            authConfirmPasswordInput.value = ''; 
-        }
-    }
-
-    async function handleSignInUp(isSignup) {
-        toggleConfirmPassword(isSignup); 
-
-        const email = authUsernameInput.value.trim();
-        const password = authPasswordInput.value;
-        const confirmPassword = authConfirmPasswordInput.value; 
+    /**
+     * Generates a permanent, unique numeric ID and stores it in localStorage.
+     * This ID is used for display and the 'tele-uid' (Telegram) link, as requested.
+     */
+    function getOrCreateLocalNumericId() {
+        let storedId = localStorage.getItem(LOCAL_ID_KEY);
         
-        if (!email || !password) {
-            showAuthError("لطفاً نام کاربري و رمز عبور را وارد کنيد.");
-            return;
+        if (storedId) {
+            localNumericId = storedId;
+        } else {
+            // Generate a large random number (10 digits) for uniqueness
+            // Note: This ID is NOT the Firebase UID, which is used for data security.
+            const min = 1000000000;
+            const max = 9999999999;
+            const newId = Math.floor(Math.random() * (max - min + 1)) + min;
+            localNumericId = newId.toString();
+            localStorage.setItem(LOCAL_ID_KEY, localNumericId);
         }
-
-        if (isSignup) {
-            if (password.length < 6) {
-                showAuthError("رمز عبور بايد حداقل ? کاراکتر باشد.");
-                return;
-            }
-            if (password !== confirmPassword) {
-                showAuthError("رمزهاي عبور با يکديگر مطابقت ندارند.");
-                return;
-            }
-        }
-
-        const firebaseEmail = email.includes('@') ? email : `${email}@game-moshgorbe.com`;
-
-        try {
-            if (isSignup) {
-                await createUserWithEmailAndPassword(auth, firebaseEmail, password);
-            } else {
-                await signInWithEmailAndPassword(auth, firebaseEmail, password);
-            }
-        } catch (error) {
-            let errorMessage = "خطا در برقراري ارتباط. لطفا بعدا تلاش کنيد.";
-            if (error.code === 'auth/weak-password') {
-                errorMessage = "رمز عبور ضعيف است. حداقل ? کاراکتر استفاده کنيد.";
-            } else if (error.code === 'auth/email-already-in-use') {
-                errorMessage = "اين نام کاربري قبلاً ثبت شده است. لطفاً وارد شويد.";
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = "نام کاربري معتبر نيست. (فقط حروف و اعداد مجاز است)";
-            } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                errorMessage = "نام کاربري يا رمز عبور اشتباه است.";
-            }
-            showAuthError(errorMessage);
-            console.error("Auth Error:", error);
-        }
-    }
-
-    async function signOutUser() {
-        if (auth && currentUserId) {
-            try {
-                await saveUserData(); 
-                await signOut(auth);
-            } catch (error) {
-                console.error("Error signing out:", error);
-            }
-        }
+        return localNumericId;
     }
     
-    // --- FIRESTORE DATA LOGIC (UNCHANGED) ---
+    // --- FIRESTORE DATA LOGIC ---
 
     function loadUserData() {
         if (!currentUserId) return;
@@ -785,6 +700,9 @@
                 
                 highScore = data.highScore || 0;
                 catCoins = data.catCoins || 0;
+                // We don't overwrite localNumericId, but we confirm it's in the profile
+                localNumericId = data.localNumericId || getOrCreateLocalNumericId(); 
+                
                 try {
                     unlockedCats = JSON.parse(data.unlockedCatsJson || '[]');
                     if (unlockedCats.length === 0) {
@@ -796,41 +714,45 @@
                 }
                 currentCatId = data.currentCatId || DEFAULT_CAT_ID;
 
-                console.log("Game data loaded from Firestore.");
+                console.log("Game data loaded from Firestore. Numeric ID:", localNumericId);
             } else {
                 console.log("No profile found. Setting up new profile...");
                 highScore = 0;
                 catCoins = 0;
                 unlockedCats = [DEFAULT_CAT_ID];
                 currentCatId = DEFAULT_CAT_ID;
-                saveUserData();
+                localNumericId = getOrCreateLocalNumericId(); // Ensure ID is generated
+                saveUserData(); // Create the initial document
             }
 
             updateGameUI();
             
-            authModal.style.display = 'none';
-            messageBox.style.display = 'flex';
-            
-            gameOverDetails.style.display = 'none'; 
+            loadingPrompt.style.display = 'none'; 
             startPrompt.style.display = 'block'; 
+            messageBox.style.display = 'flex';
+            gameOverDetails.style.display = 'none'; 
+
         }, (error) => {
             console.error("Error fetching Firestore data:", error);
         });
     }
 
     async function saveUserData() {
-        if (!currentUserId || !auth.currentUser || auth.currentUser.isAnonymous) {
-            console.warn("Cannot save data: User not authenticated.");
+        if (!currentUserId) {
+            console.warn("Cannot save data: User ID is missing.");
             return;
         }
 
+        // Always ensure the numeric ID is up-to-date locally before saving
+        getOrCreateLocalNumericId();
+        
         if (!dataChanged) {
             return; 
         }
         
         const dataToSave = {
-            userId: currentUserId,
-            username: currentUsername,
+            userId: currentUserId, // Firebase UID
+            localNumericId: localNumericId, // Numeric ID for display
             highScore: highScore,
             catCoins: catCoins,
             unlockedCatsJson: JSON.stringify(unlockedCats), 
@@ -840,6 +762,7 @@
         
         try {
             const userDocRef = doc(db, getUserDataPath(currentUserId));
+            // Use setDoc with merge: true to avoid deleting the entire document
             await setDoc(userDocRef, dataToSave, { merge: true });
             console.log("Game data saved to Firestore successfully.");
             dataChanged = false;
@@ -848,26 +771,26 @@
         }
     }
     
-    // --- UI UPDATES (UNCHANGED) ---
+    // --- UI UPDATES ---
 
     function updateGameUI() {
-        highScoreDisplay.textContent = `بهترين: ${highScore}`;
-        coinDisplay.textContent = `سکه گربه: ${catCoins} ??`;
+        highScoreDisplay.textContent = `بهترین: ${highScore}`;
+        coinDisplay.textContent = `سکه گربه: ${catCoins} 💰`;
+        
+        // Update User Status Bar with the numeric ID
+        if (localNumericId) {
+            userStatus.style.display = 'flex';
+            userInfoText.textContent = `آیدی دستگاه شما: ${localNumericId}`;
+            teleUidDisplay.textContent = localNumericId;
+        } else {
+            userStatus.style.display = 'none';
+            teleUidDisplay.textContent = 'در حال بارگذاری...';
+        }
         
         // Update Shop UI if open
         if (shopBox.style.display === 'flex') {
-            shopCoinDisplay.textContent = `سکه گربه شما: ${catCoins} ??`;
+            shopCoinDisplay.textContent = `سکه گربه شما: ${catCoins} 💰`;
             renderShopItems();
-        }
-
-        // Update User Status Bar
-        if (currentUserId && !auth.currentUser.isAnonymous) {
-            userStatus.style.display = 'flex';
-            userInfoText.textContent = `کاربر: ${currentUsername} | آيدي: ${currentUserId}`;
-            teleUidDisplay.textContent = currentUserId;
-        } else {
-            userStatus.style.display = 'none';
-            teleUidDisplay.textContent = '(براي نمايش آيدي وارد شويد)';
         }
     }
 
@@ -875,8 +798,9 @@
     // --- GAME LOGIC FUNCTIONS ---
 
     function resetGame() {
-        if (!currentUserId || auth.currentUser.isAnonymous) {
-             authModal.style.display = 'flex';
+        // Since we are using Anonymous Auth, the user is always "logged in"
+        if (!currentUserId) {
+             console.error("Authentication not ready. Cannot start game.");
              return;
         }
 
@@ -892,10 +816,10 @@
         player.vy = 0;
         player.isJumping = false;
         
-        scoreDisplay.textContent = 'امتياز: 0';
+        scoreDisplay.textContent = 'امتیاز: 0';
         messageBox.style.display = 'none';
         shopBox.style.display = 'none'; 
-        adminModal.style.display = 'none'; // Ensure admin modal is closed
+        adminModal.style.display = 'none'; 
         
         gameOverDetails.style.display = 'none'; 
         startPrompt.style.display = 'block'; 
@@ -917,11 +841,11 @@
         if (score > previousHighScore) {
             highScore = score; 
             coinsEarned = score; 
-            messageSuffix = `+${coinsEarned} سکه گربه (رکورد جديد!) کسب کرديد! ??`;
+            messageSuffix = `+${coinsEarned} سکه گربه (رکورد جدید!) کسب کردید! 🥳`;
             dataChanged = true; 
         } else {
             coinsEarned = 0;
-            messageSuffix = `سکه جديدي کسب نکرديد. بايد رکورد ${previousHighScore} را بشکنيد. ??`;
+            messageSuffix = `سکه جدیدی کسب نکردید. باید رکورد ${previousHighScore} را بشکنید. 😔`;
         }
         
         catCoins += coinsEarned;
@@ -933,18 +857,18 @@
         gameOverDetails.style.display = 'block'; 
         
         if (isWin) {
-            messageTitle.textContent = 'شکار موفق! موش دستگير شد! ??';
-            messageText.innerHTML = `شما پس از ${score} پرش موفق، برنده شديد! ??<br>${messageSuffix}`;
-            sarcasticMessage.textContent = ''; // Clear sarcastic message on win
-            restartButton.textContent = 'بازي مجدد';
+            messageTitle.textContent = 'شکار موفق! موش دستگیر شد! 🎉';
+            messageText.innerHTML = `شما پس از ${score} پرش موفق، برنده شدید! 🏅<br>${messageSuffix}`;
+            sarcasticMessage.textContent = ''; 
+            restartButton.textContent = 'بازی مجدد';
         } else {
             const randomIndexTitle = Math.floor(Math.random() * catLossPhrases.length);
             const randomIndexSarcastic = Math.floor(Math.random() * SARCASTIC_MESSAGES.length);
             
             messageTitle.textContent = catLossPhrases[randomIndexTitle]; 
-            messageText.innerHTML = `امتياز نهايي شما: ${score}<br>${messageSuffix}`;
+            messageText.innerHTML = `امتیاز نهایی شما: ${score}<br>${messageSuffix}`;
             
-            // نمايش جمله انگيزشي/طعنه‌آميز
+            // نمایش جمله انگیزشی/طعنه‌آمیز
             sarcasticMessage.textContent = SARCASTIC_MESSAGES[randomIndexSarcastic]; 
             
             restartButton.textContent = 'شروع مجدد';
@@ -986,7 +910,7 @@
         ctx.font = '16px Vazirmatn';
         ctx.fillStyle = '#111';
         ctx.textAlign = 'center';
-        ctx.fillText('??', x, y + 5);
+        ctx.fillText('🐭', x, y + 5);
     }
 
     function updateGame(timestamp) {
@@ -1031,21 +955,18 @@
              return;
         }
 
-        scoreDisplay.textContent = 'امتياز: ' + score;
+        scoreDisplay.textContent = 'امتیاز: ' + score;
         animationFrameId = requestAnimationFrame(gameLoop);
     }
     
     function gameLoop(timestamp) {
-        if (gameRunning && currentUserId && !auth.currentUser.isAnonymous) {
+        if (gameRunning && currentUserId) {
             updateGame(timestamp);
-        } else if (gameRunning && auth.currentUser.isAnonymous) {
-             gameOver(); 
-             authModal.style.display = 'flex';
         }
     }
 
 
-    // --- SHOP LOGIC (UNCHANGED JS) ---
+    // --- SHOP LOGIC ---
     function openShop() {
         gameRunning = false; 
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -1058,18 +979,14 @@
     function closeShop() {
         shopBox.style.display = 'none';
         
-        // Show the correct modal after closing shop
-        if (currentUserId && !auth.currentUser.isAnonymous) {
-            messageBox.style.display = 'flex';
-            if (score > 0) {
-                 startPrompt.style.display = 'none';
-                 gameOverDetails.style.display = 'block';
-            } else {
-                 startPrompt.style.display = 'block';
-                 gameOverDetails.style.display = 'none';
-            }
+        // Return to the game message box
+        messageBox.style.display = 'flex';
+        if (score > 0) {
+             startPrompt.style.display = 'none';
+             gameOverDetails.style.display = 'block';
         } else {
-             authModal.style.display = 'flex';
+             startPrompt.style.display = 'block';
+             gameOverDetails.style.display = 'none';
         }
         
         if (dataChanged) saveUserData();
@@ -1099,8 +1016,12 @@
         }
     }
     
+    // Globalize select/buy functions for onclick in HTML strings
+    window.selectCat = selectCat;
+    window.buyCat = buyCat;
+
     function renderShopItems() {
-        shopCoinDisplay.textContent = `سکه گربه شما: ${catCoins} ??`;
+        shopCoinDisplay.textContent = `سکه گربه شما: ${catCoins} 💰`;
         shopItemsContainer.innerHTML = '';
 
         CAT_PALETTES.forEach(cat => {
@@ -1112,25 +1033,25 @@
             let itemClass = 'shop-item border-gray-300';
 
             if (isSelected) {
-                buttonHTML = `<button class="btn bg-gray-500 !py-2 !px-4 !m-0 !mt-2">انتخاب شده ?</button>`;
+                buttonHTML = `<button class="btn bg-gray-500 !py-2 !px-4 !m-0 !mt-2">انتخاب شده ✅</button>`;
                 itemClass = 'shop-item selected';
             } else if (isUnlocked) {
                 buttonHTML = `<button onclick="selectCat('${cat.id}')" class="btn bg-green-500 hover:bg-green-600 !py-2 !px-4 !m-0 !mt-2">انتخاب</button>`;
             } else if (isFree) {
-                 buttonHTML = `<button onclick="buyCat('${cat.id}')" class="btn bg-green-500 hover:bg-green-600 !py-2 !px-4 !m-0 !mt-2">دريافت رايگان</button>`;
+                 buttonHTML = `<button onclick="buyCat('${cat.id}')" class="btn bg-green-500 hover:bg-green-600 !py-2 !px-4 !m-0 !mt-2">دریافت رایگان</button>`;
             } else {
-                buttonHTML = `<button onclick="buyCat('${cat.id}')" class="btn bg-yellow-500 hover:bg-yellow-600 !py-2 !px-4 !m-0 !mt-2">${cat.price} ?? خريد</button>`;
-                itemClass = 'shop-item border-gray-500'; // Removed 'locked' as it only controls styling
+                buttonHTML = `<button onclick="buyCat('${cat.id}')" class="btn bg-yellow-500 hover:bg-yellow-600 !py-2 !px-4 !m-0 !mt-2">${cat.price} 💰 خرید</button>`;
+                itemClass = 'shop-item border-gray-500'; 
             }
             
             // Preview Cat (Simple emoji placeholder in the shop UI)
-            const catEmoji = cat.id === 'black' ? '??‍?' : cat.id === 'white' ? '??' : cat.id === 'ginger' ? '??' : '??';
+            const catEmoji = cat.id === 'black' ? '🐈‍⬛' : cat.id === 'white' ? '🐈' : cat.id === 'ginger' ? '🧡' : '🐈';
 
             const itemHTML = `
                 <div class="${itemClass} flex flex-col items-center">
                     <div style="font-size: 3rem; line-height: 1;">${catEmoji}</div>
                     <h3 class="font-bold text-lg mt-2">${cat.name}</h3>
-                    ${isUnlocked && !isSelected ? `<p class="text-sm text-gray-500">پوسته آزاد است</p>` : isFree ? `<p class="text-sm text-green-600">رايگان</p>` : `<p class="text-sm text-yellow-700">${cat.price} سکه</p>`}
+                    ${isUnlocked && !isSelected ? `<p class="text-sm text-gray-500">پوسته آزاد است</p>` : isFree ? `<p class="text-sm text-green-600">رایگان</p>` : `<p class="text-sm text-yellow-700">${cat.price} سکه</p>`}
                     ${buttonHTML}
                 </div>
             `;
@@ -1138,7 +1059,7 @@
         });
     }
 
-    // --- ADMIN PANEL LOGIC (UNCHANGED JS) ---
+    // --- ADMIN PANEL LOGIC ---
     
     function showAdminMessage(element, message, type) {
         element.textContent = message;
@@ -1183,17 +1104,17 @@
         if (username === ADMIN_USER && password === ADMIN_PASS) {
             adminLoginView.classList.add('hidden');
             adminPanelView.classList.remove('hidden');
-            showAdminMessage(adminOperationMessage, 'ورود موفقيت‌آميز. مي‌توانيد امتيازات را مديريت کنيد.', 'success');
+            showAdminMessage(adminOperationMessage, 'ورود موفقیت‌آمیز. می‌توانید امتیازات را مدیریت کنید.', 'success');
         } else {
-            showAdminMessage(adminLoginMessage, 'نام کاربري يا رمز عبور اشتباه است.', 'error');
+            showAdminMessage(adminLoginMessage, 'نام کاربری یا رمز عبور اشتباه است.', 'error');
         }
     });
 
     // Admin Search Handler
     adminSearchButton.addEventListener('click', async () => {
-        const userId = adminUserIdInput.value.trim();
+        const userId = adminUserIdInput.value.trim(); // This is Firebase UID
         if (!userId) {
-            showAdminMessage(adminOperationMessage, 'لطفاً ID کاربر را وارد کنيد.', 'error');
+            showAdminMessage(adminOperationMessage, 'لطفاً Firebase UID کاربر را وارد کنید.', 'error');
             adminScoreDisplay.classList.add('hidden');
             adminModifyPanel.classList.add('hidden');
             return;
@@ -1213,9 +1134,10 @@
                 const data = docSnap.data();
                 highscore = data.highScore || 0;
                 coins = data.catCoins || 0;
-                showAdminMessage(adminOperationMessage, `امتياز کاربر ${userId} پيدا شد.`, 'success');
+                const numericId = data.localNumericId || 'نامشخص';
+                showAdminMessage(adminOperationMessage, `امتیاز کاربر (آیدی عددی: ${numericId}) پیدا شد.`, 'success');
             } else {
-                showAdminMessage(adminOperationMessage, `کاربر ${userId} هنوز پروفايلي نساخته است. امتياز اوليه 0 در نظر گرفته شد.`, 'success');
+                showAdminMessage(adminOperationMessage, `کاربر ${userId} هنوز پروفایلی نساخته است. امتیاز اولیه 0 در نظر گرفته شد.`, 'success');
             }
             
             adminCurrentHighscore.textContent = highscore;
@@ -1225,7 +1147,7 @@
 
         } catch (error) {
             console.error("Admin Search Error:", error);
-            showAdminMessage(adminOperationMessage, `خطا در ارتباط با پايگاه داده: ${error.message}`, 'error');
+            showAdminMessage(adminOperationMessage, `خطا در ارتباط با پایگاه داده: ${error.message}`, 'error');
             adminScoreDisplay.classList.add('hidden');
             adminModifyPanel.classList.add('hidden');
         }
@@ -1234,19 +1156,18 @@
     // Admin Modify Handler
     async function modifyUserCoins(operation) {
         if (!lastSearchedAdminUserId) {
-            showAdminMessage(adminOperationMessage, 'ابتدا يک کاربر را جستجو کنيد.', 'error');
+            showAdminMessage(adminOperationMessage, 'ابتدا یک کاربر را جستجو کنید.', 'error');
             return;
         }
         
         const amount = parseInt(adminPointAmountInput.value, 10);
         if (isNaN(amount) || amount <= 0) {
-            showAdminMessage(adminOperationMessage, 'مقدار سکه وارد شده معتبر نيست.', 'error');
+            showAdminMessage(adminOperationMessage, 'مقدار سکه وارد شده معتبر نیست.', 'error');
             return;
         }
 
-        // Check if admin is logged in (optional, but good practice if user could potentially manipulate this)
         if (adminPanelView.classList.contains('hidden')) {
-             showAdminMessage(adminOperationMessage, 'لطفاً ابتدا وارد پنل مديريت شويد.', 'error');
+             showAdminMessage(adminOperationMessage, 'لطفاً ابتدا وارد پنل مدیریت شوید.', 'error');
              return;
         }
 
@@ -1267,7 +1188,7 @@
             await setDoc(userDocRef, { catCoins: newCoins }, { merge: true });
 
             adminCurrentCatcoins.textContent = newCoins;
-            showAdminMessage(adminOperationMessage, `${amount} سکه ${isAdding ? 'اضافه' : 'کسر'} شد. سکه جديد: ${newCoins} ??`, 'success');
+            showAdminMessage(adminOperationMessage, `${amount} سکه ${isAdding ? 'اضافه' : 'کسر'} شد. سکه جدید: ${newCoins} 💰`, 'success');
             
             // If the admin modified their own account, update the game's state immediately
             if (lastSearchedAdminUserId === currentUserId) {
@@ -1277,7 +1198,7 @@
 
         } catch (error) {
             console.error("Admin Modify Error:", error);
-            showAdminMessage(adminOperationMessage, `خطا در به‌روزرساني سکه: ${error.message}`, 'error');
+            showAdminMessage(adminOperationMessage, `خطا در به‌روزرسانی سکه: ${error.message}`, 'error');
         }
     }
     
@@ -1292,6 +1213,8 @@
     // --- INITIALIZATION ---
     
     function initializeFirebase() {
+        getOrCreateLocalNumericId(); // Generate numeric ID immediately
+        
         try {
             const firebaseConfig = JSON.parse(__firebase_config);
             firebaseApp = initializeApp(firebaseConfig);
@@ -1300,67 +1223,55 @@
             
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    currentUserId = user.uid;
-                    currentUsername = user.email ? user.email.split('@')[0] : `User_${user.uid.substring(0, 4)}`;
-                    
-                    if (user.isAnonymous) {
-                         authModal.style.display = 'flex';
-                         messageBox.style.display = 'none';
-                         console.log("Signed in anonymously. Showing registration prompt.");
-                         return;
-                    }
-                    
+                    currentUserId = user.uid; // Use Firebase UID for Firestore Path
                     loadUserData(); 
-                    console.log(`User ${currentUserId} logged in.`);
+                    console.log(`User ${currentUserId} authenticated (Anonymous).`);
                 } else {
                     currentUserId = null;
-                    currentUsername = 'Guest';
-
+                    
                     try {
                         const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                         if (token) {
                             await signInWithCustomToken(auth, token);
                         } else {
+                            // Fallback to anonymous sign-in
                             await signInAnonymously(auth);
                         }
                     } catch (error) {
                          console.error("Error with initial/anonymous sign-in:", error);
+                         // If sign-in fails, show error or continue in guest mode (but game won't save)
+                         loadingPrompt.innerHTML = '<h2 class="message-title text-4xl text-red-600">خطای اتصال!</h2><p class="text-gray-600 mt-2">ذخیره امتیاز امکان‌پذیر نیست.</p>';
+                         messageBox.style.display = 'flex';
                     }
                 }
             });
 
         } catch (error) {
             console.error("Firebase Initialization Error:", error);
-            authModal.style.display = 'flex';
+            loadingPrompt.innerHTML = '<h2 class="message-title text-4xl text-red-600">خطای پیکربندی!</h2><p class="text-gray-600 mt-2">سیستم نتوانست راه‌اندازی شود.</p>';
+            messageBox.style.display = 'flex';
         }
     }
 
 
-    // --- EVENT HANDLERS (UNCHANGED) ---
+    // --- EVENT HANDLERS ---
     
     document.addEventListener('keydown', (e) => {
         // Jump action
-        if (e.code === 'Space' && gameRunning && !auth.currentUser.isAnonymous) {
+        if (e.code === 'Space' && gameRunning && currentUserId) {
             e.preventDefault(); 
             player.jump();
         }
     });
 
     canvas.addEventListener('click', () => {
-        if (gameRunning && !auth.currentUser.isAnonymous) {
+        if (gameRunning && currentUserId) {
             player.jump();
         }
     });
 
-    loginButton.addEventListener('click', () => handleSignInUp(false));
-    signupButton.addEventListener('click', () => handleSignInUp(true));
-
-    loginButton.addEventListener('click', () => toggleConfirmPassword(false));
-    signupButton.addEventListener('click', () => toggleConfirmPassword(true));
-    authUsernameInput.addEventListener('focus', () => toggleConfirmPassword(false));
-    authPasswordInput.addEventListener('focus', () => toggleConfirmPassword(false));
-
-    signOutButton.addEventListener('click', signOutUser);
+    // Sign out button is hidden, but if shown, it would sign out of anonymous session
+    // signOutButton.addEventListener('click', signOutUser); 
 
     shopButton.addEventListener('click', openShop);
     closeShopButton.addEventListener('click', closeShop);
@@ -1373,7 +1284,7 @@
         initializeFirebase();
     };
 
-    // --- PLAYER AND OBSTACLE CLASSES (UNCHANGED) ---
+    // --- PLAYER AND OBSTACLE CLASSES ---
     
     function setupCanvas() {
         canvas.width = CANVAS_WIDTH;
